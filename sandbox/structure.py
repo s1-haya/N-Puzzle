@@ -1,7 +1,19 @@
 from heapq import heappush, heapify
-from dataclasses import dataclass, field
+from dataclasses import dataclass, 
+
+# Choice at least 3 heristic function
+# abstact heristic function
+# -> Manhanttan: (|x1 -x2| + |y1 -y2|) * cells
+# -> ...
 
 
+
+# A* (h: HeuristicFunction, start: NumberBoardState, goal: NumberBoardState)
+# - opened-set
+# - closed-set
+# - current path (NumberBoardState A -> NumberBoardState B -> NumberBoardState C)
+# -> update the current path if the f cost of a new path of neighbor is lower than the current path
+ 
 @dataclass
 class NumberBoardState:
     """The state of a single number board"""

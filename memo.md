@@ -36,6 +36,11 @@ Closed-set
 -> set
 
 
+2026/10/31
+- What's the difference between min-heap and priority queue?
+- How do the program work if neigher state exists already in closed-set.
+- When do the program update the parent state?
+
 2026/10/22
 - How are the elements orgnaized and maintained?
 list, heap
