@@ -13,7 +13,12 @@ from dataclasses import dataclass,
 # - closed-set
 # - current path (NumberBoardState A -> NumberBoardState B -> NumberBoardState C)
 # -> update the current path if the f cost of a new path of neighbor is lower than the current path
- 
+
+# 1. initialize the opened-set and closed-set
+# 2. 
+
+
+
 @dataclass
 class NumberBoardState:
     """The state of a single number board"""
@@ -57,6 +62,11 @@ class NumberBoardState:
 # - start
 # - end
 # - normal
+
+# Heuristic Function
+# Misplaced tiles: Easy to implement and understand.
+# Manhattan distance: Mandatory and generally more informative than misplaced tiles.
+# Manhattan distance + linear conflict: More advanced, potentially reducing the number of
 
 def astar(start: tuple, goal: tuple) -> None:
     print(start)
