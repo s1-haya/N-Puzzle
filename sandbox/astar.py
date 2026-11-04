@@ -23,9 +23,25 @@ class AStar:
         self.open_set.push(0, self.start)
 
     def run(self) -> None:
-        print(f"Starting A* algorithm from {self.start} to {self.goal} using heuristic")
-        pass
+        """
+        Run the A* algorithm to find the shortest path from the start state to the goal state.
 
+
+
+        """
+        print(f"Starting A* algorithm from {self.start} to {self.goal} using heuristic")
+        
+        while (self.open_set):
+            current = self.open_set.pop()
+
+            if current == self.goal:
+                print("Goal reached!")
+                return
+            
+            
+
+            if current in self.closed_set:
+                continue
 
 
 def main() -> None:

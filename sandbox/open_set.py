@@ -29,3 +29,6 @@ class OpenSet:
     def get_total_count(self) -> int:
         """Return the total number of states added to the openset."""
         return self.counter
+    
+    def find_state(self, state: tuple[]) -> bool:
+        return True if state in _heap else False

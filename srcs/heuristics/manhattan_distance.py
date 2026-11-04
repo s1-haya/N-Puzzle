@@ -41,4 +41,3 @@ class ManhattanDistance(HeuristicFunction):
 			distance += abs(goal_col - curr_col) + abs(goal_row - curr_row)
 
 		return distance
-
