@@ -74,11 +74,49 @@ class AStar:
                 neighbors.append(tuple(new_state))
         return neighbors
     
-    # Create is_valid_solving_npuzzle()
-    # -> start and goal need to equal the number of inversions using inversion, permutation parity, invariant
-    # * we must exclude 0 when counting the number of inversions
+    def _get_inversions_count(self, state: tuple[int]) -> int:
+        """
+        Get inversions count.
+        we must exclude 0 when counting the number of inversions
+        """
+        
+        count = 0
+        for i in range(len(state)):
+            if state[i] == 0:
+                continue
+            for j in range(i + 1, len(state)):
+                if state[j] == 0:
+                    continue
+                if state[i] > state[j]:
+                    count += 1
+        return count
+    
+    def _get_invariant(self, state: tuple[int]) -> int:
+        """
+        Get invariant in state
+        invariant is a property that remains unchanged during legal moves.
+
+        For odd-sized puzzles (ex: 3*3 5*5):
+            invariant = inversions % 2
+        
+        For even-sized puzzles (ex: 4*4 6*6):
+            invariant = (inversions + zero_row) % 2
+
+        Returns:
+            0 if invariant is even, 1 if invariant is odd
+        """
+        return self._get_inversions_count(state) if (self.size % 2 == 1) else (self._get_inversions_count(state) + state.index(0) // self.size) % 2
+
+    def _is_solvable(self) -> bool:
+        """
+        Check if the puzzle is solvable to use the invariant.
+        """
+        return self._get_invariant(self.start) == self._get_invariant(self.goal)
 
     def run(self) -> None:
+        if not self._is_solvable():
+            print("The puzzle is not solvable.")
+            return
         while self.open_set:
             _, current_state = self.open_set.pop()
 
