@@ -13,7 +13,7 @@ class AStar:
 
     open_set: OpenSet = field(init=False)
     closed_set: set[tuple[int]] = field(init=False)
-    maxmum_number: int = field(init=False)
+    maximum_states: int = field(init=False)
     g_score: dict[tuple[int], int] = field(init=False)
     h_score: dict[tuple[int], int] = field(init=False)
     came_from: dict[tuple[int], tuple[int]] = field(init=False)
@@ -21,19 +21,22 @@ class AStar:
     def __post_init__(self) -> None:
         self.open_set = OpenSet()
         self.closed_set = set()
-        self.maxmum_number = 0
+        self.maximum_states = 0
         self.g_score = {self.start: 0}
         self.h_score = {self.start: self.heuristic.calculate(self.start, self.goal, self.size)}
         self.came_from = {}
         self.open_set.push(self.g_score[self.start] + self.h_score[self.start], self.h_score[self.start], self.start)
 
+        self.duplicate_rejected = 0
+        self.closed_states_skipped = 0
+
     def _print_output(self) -> None:
-    # print 4 parameters
+        # print 4 parameters
         # ◦ Total number of states ever selected in the "opened" set (complexity in time)
-        print(f"Maxmum number of states: {self.maxmum_number}")
+        print(f"Complexity in time: {self.maximum_states}")
         # ◦ Maximum number of states ever represented in memory at the same time
         # during the search (complexity in size)
-        print(f"Total size: {self.open_set.get_total_states_selected()}")
+        print(f"Complexity in size: {self.open_set.get_total_states_selected()}")
         # ◦ Number of moves required to transition from the initial state to the final state,
         # according to the search
         print(f"Number of moves: {self.g_score[self.goal]}")
@@ -41,6 +44,7 @@ class AStar:
         # ◦ The ordered sequence of states that make up the solution, according to the
         # search
         print(f"The ordered sequence of states")
+
         for current_state in self._reconstruct_solvable_path():
             print(f"Current State: {current_state}, f_score: g(n){self.g_score[current_state]} + h(n){self.h_score[current_state]} ")
             self.print_board(current_state)
@@ -160,27 +164,23 @@ class AStar:
 
             for neighbor in self._get_neighbors(current_state):
                 neighbor_g_score = self.g_score[current_state] + 1
-                if neighbor_g_score < self.g_score.get(
+                if neighbor_g_score >= self.g_score.get(
                     neighbor, float("inf")
                 ):
-                    self.came_from[neighbor] = current_state
-                    self.g_score[neighbor] = neighbor_g_score
-                    self.h_score[neighbor] = self.heuristic.calculate(
-                        neighbor,
-                        self.goal,
-                        self.size
-                    )
-                    self.open_set.push(
-                        self.g_score[neighbor] + self.h_score[neighbor],
-                        self.h_score[neighbor],
-                        neighbor
-                    )
-            # print(f"Current State: {current_state}, f_score: g(n){self.g_score[current_state]} + h(n){self.h_score[current_state]} ")
-            # self.print_board(current_state)
-
-            if self.maxmum_number < len(self.open_set) + len(self.closed_set):
-                self.maxmum_number = len(self.open_set) + len(self.closed_set)
-
+                    continue
+                self.came_from[neighbor] = current_state
+                self.g_score[neighbor] = neighbor_g_score
+                self.h_score[neighbor] = self.heuristic.calculate(
+                    neighbor,
+                    self.goal,
+                    self.size
+                )
+                self.open_set.push(
+                    self.g_score[neighbor] + self.h_score[neighbor],
+                    self.h_score[neighbor],
+                    neighbor
+                )
+            self.maximum_states = max(self.maximum_states, len(self.open_set) + len(self.closed_set))
         print("Fail")
 
     def print_info(self) -> None:

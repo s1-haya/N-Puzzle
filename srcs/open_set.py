@@ -20,6 +20,8 @@ class OpenSet:
         2. Lowest h-score if f-scores are equal.
         3. Insertion order if both scores are equal.
         """
+        if state in self._heap:
+            heapq.heapop(state)
         heapq.heappush(
             self._heap,
             (f_score, h_score, next(self._order), state)

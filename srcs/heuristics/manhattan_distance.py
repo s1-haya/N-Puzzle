@@ -26,11 +26,11 @@ class ManhattanDistance(HeuristicFunction):
 		"""
 
 		distance = 0
-		for index, value in enumerate(state):
-			if value == 0:
+		for index, tile in enumerate(state):
+			if tile == 0:
 				continue
 
-			goal_index = goal.index(value)
+			goal_index = goal.index(tile)
 			if index == goal_index:
 				continue
 
