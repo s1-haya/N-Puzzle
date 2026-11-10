@@ -137,7 +137,13 @@ class AStar:
         Returns:
             0 if invariant is even, 1 if invariant is odd
         """
-        return self._get_inversions_count(state) if (self.size % 2 == 1) else (self._get_inversions_count(state) + state.index(0) // self.size) % 2
+        inversions = self._get_inversions_count(state)
+
+        if self.size % 2 == 0:
+            zero_row = state.index(0) // self.size
+            inversions += zero_row
+
+        return inversions % 2
 
     def _is_solvable(self) -> bool:
         """
