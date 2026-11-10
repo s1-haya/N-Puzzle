@@ -1,0 +1,6 @@
+# a full-line comment 100000 1234
+4 # size comment 55
+1 2 3 4
+12 13 14 5
+11 0 15 6
+10 9 8 7 # ignored trailing digits 999 99
