@@ -27,34 +27,23 @@ class AStar:
         self.came_from = {}
         self.open_set.push(self.g_score[self.start] + self.h_score[self.start], self.h_score[self.start], self.start)
 
-        self.duplicate_rejected = 0
-        self.closed_states_skipped = 0
-
     def _print_output(self) -> None:
-        # print 4 parameters
-        # ◦ Total number of states ever selected in the "opened" set (complexity in time)
-        print(f"Complexity in time: {self.maximum_states}")
-        # ◦ Maximum number of states ever represented in memory at the same time
-        # during the search (complexity in size)
-        print(f"Complexity in size: {self.open_set.get_total_states_selected()}")
-        # ◦ Number of moves required to transition from the initial state to the final state,
-        # according to the search
+        print(f"Complexity in time: {self.open_set.get_total_states_selected()}")
+        print(f"Complexity in size: {self.maximum_states}")
         print(f"Number of moves: {self.g_score[self.goal]}")
-        # g_score[came_from(end)]
-        # ◦ The ordered sequence of states that make up the solution, according to the
-        # search
-        print(f"The ordered sequence of states")
-
+        print(f"The ordered sequence of states:")
         for current_state in self._reconstruct_solvable_path():
-            print(f"Current State: {current_state}, f_score: g(n){self.g_score[current_state]} + h(n){self.h_score[current_state]} ")
+            print(f"Step{self.g_score[current_state]}: {current_state}")
             self.print_board(current_state)
 
     def _reconstruct_solvable_path(self) -> list:
+        """Return the ordered sequence of states from start to goal."""
         current_state = self.goal
         ordered_sequence = []
         while current_state != self.start:
             ordered_sequence.insert(0, current_state)
             current_state = self.came_from[current_state]
+        ordered_sequence.insert(0, self.start)
         return ordered_sequence
 
     def _get_neighbors(self, state: tuple[int]) -> list[tuple[int]]:
@@ -152,9 +141,13 @@ class AStar:
         return self._get_invariant(self.start) == self._get_invariant(self.goal)
 
     def run(self) -> None:
+        """
+        Run the A* algorithm to find the shortest path from start to goal.
+        If the puzzle is unsolvable, print a message and exit the program.
+        """
         if not self._is_solvable():
-            print("The puzzle is not solvable.")
-            return
+            print("The puzzle is not solvable. Because the invariant of the start state is different from the invariant of the goal state.")
+            raise SystemExit(1)
         while self.open_set:
             _, current_state = self.open_set.pop()
 
@@ -162,7 +155,6 @@ class AStar:
                 continue
 
             if current_state == self.goal:
-                print(f"Goal reached! {current_state}")
                 self._print_output()
                 return
 
@@ -187,9 +179,9 @@ class AStar:
                     neighbor
                 )
             self.maximum_states = max(self.maximum_states, len(self.open_set) + len(self.closed_set))
-        print("Fail")
 
     def print_info(self) -> None:
+        """Print information about the A* algorithm's initial state and heuristic."""
         print(f"Starting A* algorithm from {self.start} to {self.goal} using {self.heuristic.__class__.__name__} heuristic")
         print(f"Initial open set: {self.open_set._heap}, {self.open_set.get_total_states_selected()} states")
         print(f"Initial closed set: {self.closed_set}")
@@ -206,32 +198,3 @@ class AStar:
             end = start + self.size
             if state is not None:
                 print(*state[start:end])
-
-
-# # T: Goal State
-# # C: Current State
-# # S: Start State
-
-# ---
-
-# # f(n) = g(n) + h(n)
-# # n: node
-# # f: total cost
-# # g: real cost from S to C
-# # h: estimate cost from C to G
-
-# ---
-# # Heuristic Function
-# -> to estiate the cost to move from C to G
-
-# A* -> 500
-# - H1
-# - H2
-# - H3
-
-
-# def manhattan_distance()
-#     p, q
-#     p(x1, y1), q(x2, y2)
-#     |x1 - x2| + |y1 - y2|
-#     list[[1, 2], [2, 1]]

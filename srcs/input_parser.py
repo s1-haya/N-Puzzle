@@ -1,5 +1,28 @@
 from pathlib import Path
+from typing import Any
+from argparse import ArgumentParser
 from srcs.heuristics.basic_heuristic import HeuristicFunction
+from srcs.heuristics.registry import HEURISTICS
+
+
+def parse_argument(*args: Any, **kwargs: Any) -> HeuristicFunction:
+    parser = ArgumentParser(
+        description="Solve N-Puzzle using A* search."
+    )
+
+    parser.add_argument(
+        "-i", "--input",
+        required=True,
+        help="Path to the puzzle input file.",
+    )
+
+    parser.add_argument(
+        "-H", "--heuristic",
+        choices=HEURISTICS.keys(),
+        default="manhattan",
+        help="Heuristic function (default: manhattan).",
+    )
+    return parser.parse_args(*args, **kwargs)
 
 
 def parse_puzzle_file(path: str | Path) -> tuple[int, tuple[int, ...]]:
